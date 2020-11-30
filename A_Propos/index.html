@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Risques Climatiques Au Maroc et Au Nord d'Afrique</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <link rel="stylesheet" href="leaflet.css" />
+	<script src="leaflet.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+  <!-- graph Style-->
+	<style>
+		#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+	</style>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="overlay-navigation">
+  <nav role="navigation">
+    <ul>
+      <li><a href="../index.html" data-content="The beginning">Home</a></li>
+      <li><a href="../Maroc_en_Cartes/index.html" data-content="Curious?">Maroc<br>en Cartes</a></li>
+      <li><a href="../Maroc_en_3D/index.html" data-content="I got game">Maroc<br>en 3D</a></li>
+      <li><a href="../NA_en_Cartes/index.html" data-content="Curious?">NA en Cartes</a></li>
+      <li><a href="../NA_en_Cartes_Dynam/index.html" data-content="Curious?">NA en Cartes<br>Dynamiques</a></li>
+      <li><a href="../NA_en_Graphes/index.html" data-content="I got game">NA en Graphes</a></li>
+      <li><a href="../A_Propos/index.html" data-content="Only the finest">A Propos</a></li>
+      <li><a href="../Contact/index.html" data-content="Don't hesitate">Contact</a></li>
+    </ul>
+  </nav>
+</div>
+
+<section class="home">
+  <!-- add text or link in the menu bar
+  <a href="https://codepen.io/fluxus/pen/gPWvZm" target="_blank">Click for a slightly nicer Velocity.js version</a>
+  -->
+  <div class="open-overlay">
+    <span class="bar-top"></span>
+    <span class="bar-middle"></span>
+    <span class="bar-bottom"></span>
+  </div>
+</section>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script  src="./script.js"></script>
+  <header style="color:blue;font-family:courier;font-size:160%;text-align:center">Representation graphique des précipitations des pays du NA</header>
+  <!-- Code for the map -->
+  <!-- HTML -->
+  <div id="chartdiv"></div>
+  <!-- Chart code -->
+  <script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+
+
+var chart = am4core.create('chartdiv', am4charts.XYChart)
+chart.colors.step = 2;
+
+chart.legend = new am4charts.Legend()
+chart.legend.position = 'top'
+chart.legend.paddingBottom = 20
+chart.legend.labels.template.maxWidth = 95
+
+var xAxis = chart.xAxes.push(new am4charts.CategoryAxis())
+xAxis.dataFields.category = 'category'
+xAxis.renderer.cellStartLocation = 0.1
+xAxis.renderer.cellEndLocation = 0.9
+xAxis.renderer.grid.template.location = 0;
+
+var yAxis = chart.yAxes.push(new am4charts.ValueAxis());
+yAxis.min = 0;
+
+function createSeries(value, name) {
+    var series = chart.series.push(new am4charts.ColumnSeries())
+    series.dataFields.valueY = value
+    series.dataFields.categoryX = 'category'
+    series.name = name
+
+    series.events.on("hidden", arrangeColumns);
+    series.events.on("shown", arrangeColumns);
+
+    var bullet = series.bullets.push(new am4charts.LabelBullet())
+    bullet.interactionsEnabled = false
+    bullet.dy = 30;
+    bullet.label.text = '{valueY}'
+    bullet.label.fill = am4core.color('#ffffff')
+
+    return series;
+}
+
+chart.data = [
+    {
+        category: 'Algerie',
+        cotiere: 687,
+        montagneuse: 827,
+        saharienne: 14.5
+    },
+    {
+        category: 'Egypt',
+        cotiere: 29,
+        montagneuse: 200,
+        saharienne: 1
+    },
+    {
+        category: 'Libye',
+        cotiere: 329,
+        montagneuse: 558,
+        saharienne: 9
+    },
+    {
+        category: 'Maroc',
+        cotiere: 788,
+        montagneuse: 1110,
+        saharienne: 124
+    },
+    {
+        category: 'Tunisie',
+        cotiere: 470,
+        montagneuse: 1582,
+        saharienne: 90
+    }
+]
+
+
+createSeries('cotiere', 'Cotiere');
+createSeries('montagneuse', 'Montagneuse');
+createSeries('saharienne', 'Saharienne');
+
+function arrangeColumns() {
+
+    var series = chart.series.getIndex(0);
+
+    var w = 1 - xAxis.renderer.cellStartLocation - (1 - xAxis.renderer.cellEndLocation);
+    if (series.dataItems.length > 1) {
+        var x0 = xAxis.getX(series.dataItems.getIndex(0), "categoryX");
+        var x1 = xAxis.getX(series.dataItems.getIndex(1), "categoryX");
+        var delta = ((x1 - x0) / chart.series.length) * w;
+        if (am4core.isNumber(delta)) {
+            var middle = chart.series.length / 2;
+
+            var newIndex = 0;
+            chart.series.each(function(series) {
+                if (!series.isHidden && !series.isHiding) {
+                    series.dummyData = newIndex;
+                    newIndex++;
+                }
+                else {
+                    series.dummyData = chart.series.indexOf(series);
+                }
+            })
+            var visibleCount = newIndex;
+            var newMiddle = visibleCount / 2;
+
+            chart.series.each(function(series) {
+                var trueIndex = chart.series.indexOf(series);
+                var newIndex = series.dummyData;
+
+                var dx = (newIndex - trueIndex + middle - newMiddle) * delta
+
+                series.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+                series.bulletsContainer.animate({ property: "dx", to: dx }, series.interpolationDuration, series.interpolationEasing);
+            })
+        }
+    }
+}
+
+}); // end am4core.ready()
+</script>
+
+
+</body>
+</html>

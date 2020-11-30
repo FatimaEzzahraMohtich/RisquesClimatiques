@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>Risques Climatiques Au Maroc et Au Nord d'Afrique</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/5.0.0/normalize.min.css">
+
+  <link rel="stylesheet" href="leaflet.css" />
+	<script src="leaflet.js"></script>
+	<script src="SelectLayers.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/core.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/charts.js"></script>
+  <script src="https://cdn.amcharts.com/lib/4/themes/animated.js"></script>
+
+  <!-- Map Style-->
+	<style>
+#chartdiv {
+  width: 100%;
+  height: 500px;
+}
+	</style>
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<div class="overlay-navigation">
+  <nav role="navigation">
+    <ul>
+      <li><a href="../index.html" data-content="The beginning">Home</a></li>
+      <li><a href="../Maroc_en_Cartes/index.html" data-content="Curious?">Maroc<br>en Cartes</a></li>
+      <li><a href="../Maroc_en_3D/index.html" data-content="I got game">Maroc<br>en 3D</a></li>
+      <li><a href="../NA_en_Cartes/index.html" data-content="Curious?">NA en Cartes</a></li>
+      <li><a href="../NA_en_Cartes_Dynam/index.html" data-content="Curious?">NA en Cartes<br>Dynamiques</a></li>
+      <li><a href="../NA_en_Graphes/index.html" data-content="I got game">NA en Graphes</a></li>
+      <li><a href="../A_Propos/index.html" data-content="Only the finest">NA en Graphes</a></li>
+      <li><a href="../Contact/index.html" data-content="Don't hesitate">Contact</a></li>
+    </ul>
+  </nav>
+</div>
+
+<section class="home">
+  <!-- add text or link in the menu bar
+  <a href="https://codepen.io/fluxus/pen/gPWvZm" target="_blank">Click for a slightly nicer Velocity.js version</a>
+  -->
+  <div class="open-overlay">
+    <span class="bar-top"></span>
+    <span class="bar-middle"></span>
+    <span class="bar-bottom"></span>
+  </div>
+</section>
+<!-- partial -->
+  <script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+  <script  src="./script.js"></script>
+  <header style="color:blue;font-family:courier;font-size:160%;text-align:center">Representation graphique du pourcentage de l'emission du CO2 entre 2015 et 2018 des pays du NA</header>
+  <div id="chartdiv"></div>
+  <!-- Chart code -->
+<script>
+am4core.ready(function() {
+
+// Themes begin
+am4core.useTheme(am4themes_animated);
+// Themes end
+
+/**
+ * Define data for each year
+ */
+var chartData = {
+  "2015": [
+    { "sector": "Algerie", "size": 150.704 },
+    { "sector": "Egypt", "size": 219.304},
+    { "sector": "Libye", "size": 56.3954 },
+    { "sector": "Maroc", "size": 61.02784 },
+    { "sector": "Tunisie", "size": 29.27462 } ],
+  "2016": [
+    { "sector": "Algerie", "size": 147.5786 },
+    { "sector": "Egypt", "size": 233.1712 },
+    { "sector": "Libye", "size": 50.04612 },
+    { "sector": "Maroc", "size": 61.03152 },
+    { "sector": "Tunisie", "size": 29.00814 } ],
+  "2017": [
+    { "sector": "Algerie", "size": 147.2229 },
+    { "sector": "Egypt", "size": 237.0178 },
+    { "sector": "Libye", "size": 52.33074 },
+    { "sector": "Maroc", "size": 63.68913 },
+    { "sector": "Tunisie", "size": 30.48429 } ],
+ 
+  "2018": [
+    { "sector": "Algerie", "size": 155.7253 },
+    { "sector": "Egypt", "size": 238.8157 },
+    { "sector": "Libye", "size": 54.01567 },
+    { "sector": "Maroc", "size": 66.30977 },
+    { "sector": "Tunisie", "size": 31.57657 } ]
+};
+
+// Create chart instance
+var chart = am4core.create("chartdiv", am4charts.PieChart);
+
+// Add data
+chart.data = [
+  { "sector": "Algerie", "size": 150.704 },
+  { "sector": "Egypt", "size": 219.304 },
+  { "sector": "Libye", "size": 56.3954 },
+  { "sector": "Maroc", "size": 61.02784 },
+  { "sector": "Tunisie", "size": 29.27462 }
+];
+
+// Add label
+chart.innerRadius = 100;
+var label = chart.seriesContainer.createChild(am4core.Label);
+label.text = "2015";
+label.horizontalCenter = "middle";
+label.verticalCenter = "middle";
+label.fontSize = 50;
+
+// Add and configure Series
+var pieSeries = chart.series.push(new am4charts.PieSeries());
+pieSeries.dataFields.value = "size";
+pieSeries.dataFields.category = "sector";
+
+// Animate chart data
+var currentYear = 2015;
+function getCurrentData() {
+  label.text = currentYear;
+  var data = chartData[currentYear];
+  currentYear++;
+  if (currentYear > 2018)
+    currentYear = 2015;
+  return data;
+}
+
+function loop() {
+  //chart.allLabels[0].text = currentYear;
+  var data = getCurrentData();
+  for(var i = 0; i < data.length; i++) {
+    chart.data[i].size = data[i].size;
+  }
+  chart.invalidateRawData();
+  chart.setTimeout( loop, 4000 );
+}
+
+loop();
+
+}); // end am4core.ready()
+</script>
+
+
+</body>
+</html>

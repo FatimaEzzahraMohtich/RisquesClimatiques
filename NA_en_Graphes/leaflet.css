@@ -88,15 +88,15 @@ nav li a:hover {
   font-weight: 400;
 }
 
-/* change navigation bar colors*/
-nav li:nth-of-type(1){background-color: #29363B}
-nav li:nth-of-type(2){background-color: #581845}
-nav li:nth-of-type(3){background-color: #900C3F}
-nav li:nth-of-type(4){background-color: #C70039}
-nav li:nth-of-type(5){background-color: #EA495F}
-nav li:nth-of-type(6){background-color: #F4837D}
-nav li:nth-of-type(7){background-color: #FDCEA9}
-nav li:nth-of-type(8){background-color: #4D4D4D}
+* change navigation bar colors*/
+nav li:nth-of-type(1){background-color: #41ab5d}
+nav li:nth-of-type(2){background-color: #a1d99b}
+nav li:nth-of-type(3){background-color: #c7e9c0}
+nav li:nth-of-type(4){background-color: #016450}
+nav li:nth-of-type(5){background-color: #02818a}
+nav li:nth-of-type(6){background-color: #41ae76}
+nav li:nth-of-type(7){background-color: #238b45}
+nav li:nth-of-type(8){background-color: #005824}
 
 .slide-in-nav-item {
   -webkit-animation: slide-in-nav-item 0.4s linear 1 .2s both;

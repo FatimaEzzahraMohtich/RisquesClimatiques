@@ -169,24 +169,9 @@
     
 var MonSlider = new L.Control.MonSlider();
 map.addControl(MonSlider);
-var infoID = L.control();
-
-
-infoID.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'infoID'); // create a div with a class "info"
-    this.update();
-    return this._div;
-};
-
-// method that we will use to update the control based on feature properties passed
-infoID.update = function (props) {
-    this._div.innerHTML = '<h4>Superficie des zones deforestees</h4>' +  
-    'Merci de mettre le cursuer sur le cercle correspondant au pays qui vous intéresse';
-};
-infoID.addTo(map);
 
     function getRadius(area) {
-    var radius = Math.sqrt(area)*(20/Math.sqrt(14.8));
+    var radius = Math.sqrt(area)*(1/Math.sqrt(14.8));
       return radius*3;
     };
     var deforest90_00 = L.geoJson(Centroide_NA, {style: MonstyleID,
@@ -195,26 +180,6 @@ infoID.addTo(map);
                         radius: getRadius(feature.properties.Deforet90_00)
                   });
             },
-            onEachFeatureID: function (feature, layerID) {
-              var tooltip = "<b> Pays : " + layer.feature.properties.Pays + "</b><br/>" +
-              "<b>Superficie déforestée entre 1990 et 2000 :</b> " + layer.feature.properties.Deforet90_00 +"*1000 ha/année</br>" 
-              layer.bindTooltip(tooltip); //bind text and tooltip to the layer
-                    layer.on('mouseover', function () {
-                      layer.bindTooltip(tooltip).openTooltip();
-                      layer.setStyle({
-                      fillColor: '#addd8e',
-                      fillOpacity: 1
-          });
-        });
-
-                    layer.on('mouseout', function () {
-                      layer.setStyle({
-                      fillColor: '#f7fcb9',
-                      fillOpacity: 0.3
-          });
-          layer.bindTooltip(tooltip).closeTooltip();
-        })
-      }
         }).addTo(map);
     var deforest00_10 = L.geoJson(Centroide_NA, {style: MonstyleID,
             pointToLayer: function(feature, latlng) {
@@ -222,90 +187,30 @@ infoID.addTo(map);
                         radius: getRadius(feature.properties.Deforet00_10)
                   });
             },
-            onEachFeatureID: function (feature, layer) {
-              var tooltip = "<b> Pays : " + layer.feature.properties.Pays + "</b><br/>" +
-              "<b>Superficie déforestée entre 2000 et 2010 :</b> " + layer.feature.properties.Deforet00_10 +"*1000 ha/année</br>" 
-              layer.bindTooltip(tooltip); //bind text and tooltip to the layer
-                    layer.on('mouseover', function () {
-                      layer.bindTooltip(tooltip).openTooltip();
-                      layer.setStyle({
-                      fillColor: '#addd8e',
-                      fillOpacity: 1
-          });
-        });
-
-                    layer.on('mouseout', function () {
-                      layer.setStyle({
-                      fillColor: '#f7fcb9',
-                      fillOpacity: 0.3
-          });
-          layer.bindTooltip(tooltip).closeTooltip();
-        })
-
-      }
-        });
+        }).addTo(map);
     var deforest10_15 = L.geoJson(Centroide_NA, {style: MonstyleID,
             pointToLayer: function(feature, latlng) {
               return L.circleMarker(latlng, {
                         radius: getRadius(feature.properties.Deforet10_15)
                   });
             },
-            onEachFeatureID: function (feature, layerID) {
-              var tooltip = "<b> Pays : " + layer.feature.properties.Pays + "</b><br/>" +
-              "<b>Superficie déforestée entre 2010 et 2015 :</b> " + layer.feature.properties.Deforet10_15 +"*1000 ha/année</br>" 
-              layer.bindTooltip(tooltip); //bind text and tooltip to the layer
-                    layer.on('mouseover', function () {
-                      layer.bindTooltip(tooltip).openTooltip();
-                      layer.setStyle({
-                      fillColor: '#addd8e',
-                      fillOpacity: 1
-          });
-        });
-                    layer.on('mouseout', function () {
-                      layer.setStyle({
-                      fillColor: '#f7fcb9',
-                      fillOpacity: 0.3
-          });
-          layer.bindTooltip(tooltip).closeTooltip();
-        })
-
-      }
-        });
+        }).addTo(map);
     var deforest15_20 = L.geoJson(Centroide_NA, {style: MonstyleID,
             pointToLayer: function(feature, latlng) {
               return L.circleMarker(latlng, {
                         radius: getRadius(feature.properties.Deforet15_20)
                   });
             },
-            onEachFeatureID: function (feature, layerID) {
-              var tooltip = "<b> Pays : " + layer.feature.properties.Pays + "</b><br/>" +
-              "<b>Superficie déforestée entre 2015 et 2020 :</b> " + layer.feature.properties.Deforet15_20 +"*1000 ha/année</br>" 
-              layer.bindTooltip(tooltip); //bind text and tooltip to the layer
-                    layer.on('mouseover', function () {
-                      layer.bindTooltip(tooltip).openTooltip();
-                      layer.setStyle({
-                      fillColor: '#addd8e',
-                      fillOpacity: 1
-          });
-        });
-
-                    layer.on('mouseout', function () {
-                      layer.setStyle({
-                      fillColor: '#f7fcb9',
-                      fillOpacity: 0.3
-          });
-          layer.bindTooltip(tooltip).closeTooltip();
-        })
-
+        }).addTo(map);
+    function highlightFeatureID(e) {
+      var layerID = e.target;
+      layerID.setStyle({
+          weight: 2,
+          color: '#c6dbef',
+          dashArray: '',
+          fillOpacity: 0.2
+      });
       }
-        });
-    function onEachFeatureID(feature, layerID) {
-    layerID.on({
-        mouseover: highlightFeatureID,
-        mouseout: resetHighlightID,
-        click: zoomToFeatureID
-    });
-  }  
     function resetHighlightID(e) {
       geojsonID.resetStyle(e.target);
           infoID.update();
@@ -316,33 +221,46 @@ infoID.addTo(map);
         map.fitBounds(e.target.getBounds());
     }
 
-    function highlightFeatureID(e) {
-      var layerID = e.target;
-      layerID.setStyle({
-          weight: 2,
-          color: '#c6dbef',
-          dashArray: '',
-          fillOpacity: 0.2
-      });
-      }
+    function onEachFeatureID(feature, layerID) {
+    layerID.on({
+        mouseover: highlightFeatureID,
+        mouseout: resetHighlightID,
+        click: zoomToFeatureID
+    });
+  }  
     function MonstyleID(feature) {
     return {
       weight: 1,
       opacity: 1,
       color: 'black',
       fillOpacity: 0.8,
-      fillColor: '#2ca25f',
+      fillColor: '#f7fcb9',
     };
   }
   function Monstyle2(feature) {
     return {
-      weight: 1,
-      opacity: 1,
-      color: 'black',
-      fillOpacity: 0.8,
-      fillColor: "#f7ff99",
+      weight: 2,
+            opacity: 1,
+            color: 'lightblue',
+            dashArray: '3',
+            fillOpacity: 0.1,
     };
   }
+var infoID = L.control();
+
+infoID.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'infoID'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+infoID.update = function (props) {
+    this._div.innerHTML = '<h4>Superficie des zones deforestees</h4>' +  (props ?
+        'Pays : <b>' + props.Pays + '</b> <br />uperficie de deforestation entre 1990 et 2000: '+ props.Deforet90_00 + '</b> <br />uperficie de deforestation entre 2000 et 2010: '+ props.Deforet00_10 + '</b> <br />uperficie de deforestation entre 2010 et 2015: '+ props.Deforet10_15 + '</b> <br />uperficie de deforestation entre 2015 et 2020: '+ props.Deforet15_20 + '  ' + '</sup>' 
+          :'Merci de mettre le cursuer sur le cercle correspondant au pays qui vous intéresse');
+};
+infoID.addTo(map);
     // carte a symboles proportionnelles des superficies de foret
     // method that we will use to update the control based on feature properties passed
 var valeur=1; 
@@ -428,19 +346,6 @@ var infoIF = L.control();
         var MonSlider = new L.Control.MonSlider();
         map.addControl(MonSlider);
 
-var infoIF = L.control();
-infoIF.onAdd = function (map) {
-    this._div = L.DomUtil.create('div', 'infoIF'); // create a div with a class "info"
-    this.update();
-    return this._div;
-};
-
-// method that we will use to update the control based on feature properties passed
-infoIF.update = function (props) {
-    this._div.innerHTML = '<h4>Superficie des zones couvertes par des forets</h4>' +  
-    'Merci de mettre le cursuer sur le cercle correspondant au pays qui vous intéresse';
-};
-infoIF.addTo(map);
 
 //************************************************************************************************//   
     function getRadius(area) {
@@ -597,14 +502,30 @@ infoIF.addTo(map);
   }
   function Monstyle2(feature) {
     return {
-      weight: 1,
-      opacity: 1,
-      color: 'black',
-      fillOpacity: 0.8,
-      fillColor: "#f7ff99",
+       weight: 2,
+            opacity: 1,
+            color: 'lightblue',
+            dashArray: '3',
+            fillOpacity: 0.1,
     };
   }
-  
+
+
+var infoIF = L.control();
+infoIF.onAdd = function (map) {
+    this._div = L.DomUtil.create('div', 'infoIF'); // create a div with a class "info"
+    this.update();
+    return this._div;
+};
+
+// method that we will use to update the control based on feature properties passed
+infoIF.update = function (props) {
+    this._div.innerHTML = '<h4>Superficie des zones couvertes par des forets</h4>' + (props ?
+         'Pays : <b>' + props.Pays + '</b> <br />uperficie des deforets entre 1990 et 2000: '+ props.forest90_00 + '</b> <br />uperficie des forets entre 2000 et 2010: '+ props.forest00_10 + '</b> <br />uperficie des forests entre 2010 et 2015: '+ props.forest10_15 + '</b> <br />uperficie des foretsentre 2015 et 2020: '+ props.forest15_20 + '  ' + '</sup>'  
+         :'Merci de mettre le cursuer sur le cercle correspondant au pays qui vous intéresse');
+};
+infoIF.addTo(map);
+
 var infoID = L.control();
 var infoIF = L.control();
 
@@ -621,11 +542,11 @@ map.on('overlayadd', function (eventLayer) {
 // DECLARATION DES LAYEIS */
     
     var geojsonID = L.geoJson(Climat_NA, {
-        style: MonstyleID,
+        style: Monstyle2,
         onEachFeature: onEachFeatureID,
 });
     var geojsonIF = L.geoJson(Climat_NA, {
-        style: MonstyleIF,
+        style: Monstyle2,
         onEachFeature: onEachFeatureIF,
 });
 

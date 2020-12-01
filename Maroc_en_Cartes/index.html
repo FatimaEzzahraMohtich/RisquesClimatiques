@@ -446,6 +446,11 @@
             dashArray: '',
             fillOpacity: 0.9
         });
+	    
+	if (!L.Browser.ie && !L.Browser.opera && !L.Browser.edge) {
+            layerCO.bringToFront();
+        }
+            infoCO.update(layerCO.feature.properties);
     }
 
 
